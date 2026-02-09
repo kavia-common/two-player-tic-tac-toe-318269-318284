@@ -1,213 +1,242 @@
-/* CSS Variables for Theme Management */
+/* Modern light theme for Tic Tac Toe
+   Palette (per requirements):
+   - primary: #3b82f6
+   - success: #06b6d4
+   - error:   #EF4444
+   - background: #f9fafb
+   - surface:    #ffffff
+   - text:       #111827
+*/
+
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  /* Core theme colors */
+  --color-primary: #3b82f6;
+  --color-success: #06b6d4;
+  --color-error: #ef4444;
+
+  --color-bg: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+
+  /* Supporting neutrals */
+  --color-muted: #6b7280; /* slate-ish for secondary text */
+  --color-border: #e5e7eb; /* light gray border */
+  --color-ring: rgba(59, 130, 246, 0.45);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.06);
+  --shadow-md: 0 10px 25px rgba(17, 24, 39, 0.08);
+  --shadow-lg: 0 18px 40px rgba(17, 24, 39, 0.12);
+
+  /* Typography */
+  --font-sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+* {
+  box-sizing: border-box;
 }
 
 .App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
 }
 
 .App-header {
-  background-color: var(--bg-secondary);
+  /* Centered game board area */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
+
+  padding: 28px 16px;
+  gap: 18px;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
-}
-
-.theme-toggle:active {
-  transform: translateY(0);
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
-  }
-}
-
-/* --- Tic Tac Toe scaffold styles --- */
 .title {
-  margin: 0 0 6px;
-  font-size: 42px;
-  letter-spacing: -0.02em;
+  margin: 0;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 .subtitle {
-  margin: 0 0 18px;
-  font-size: 16px;
-  opacity: 0.85;
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: var(--color-muted);
+}
+
+/* Optional: visually emphasize outcome states if App.js adds these classes later */
+.subtitle.is-winner {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.subtitle.is-draw {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.subtitle.is-error {
+  color: var(--color-error);
+  font-weight: 600;
 }
 
 .ttt-board {
+  /* Responsive square grid:
+     - fits smaller screens (min)
+     - caps at a comfortable size on desktop (max)
+  */
+  --board-size: min(84vw, 360px);
+  --gap: 10px;
+  width: var(--board-size);
+
   display: grid;
-  grid-template-columns: repeat(3, 92px);
-  grid-template-rows: repeat(3, 92px);
-  gap: 10px;
-  padding: 16px;
-  border-radius: 16px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+
+  padding: 14px;
+  border-radius: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
 }
 
 .ttt-square {
+  /* Ensure perfect squares regardless of width */
+  aspect-ratio: 1 / 1;
+  width: 100%;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   appearance: none;
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  font-size: 44px;
-  font-weight: 700;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: #f3f4f6; /* subtle contrast vs surface */
+  color: var(--color-text);
+
+  font-size: clamp(34px, 7.6vw, 56px);
+  font-weight: 800;
   line-height: 1;
+  letter-spacing: -0.02em;
+
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  user-select: none;
+
+  transition: transform 120ms ease, box-shadow 200ms ease, border-color 200ms ease,
+    background-color 200ms ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .ttt-square:hover {
   border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  background: #eef2ff; /* light indigo tint */
+  box-shadow: 0 10px 22px rgba(17, 24, 39, 0.10);
   transform: translateY(-1px);
 }
 
 .ttt-square:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 14px rgba(17, 24, 39, 0.10);
 }
 
 .ttt-square:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.5);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
+}
+
+/* Disabled states: keep readable contrast, remove hover affordance */
+.ttt-square:disabled,
+.ttt-square[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.88;
+  background: #f3f4f6;
+  box-shadow: none;
+  transform: none;
+}
+
+.ttt-square:disabled:hover,
+.ttt-square[aria-disabled="true"]:hover {
+  border-color: var(--color-border);
+  background: #f3f4f6;
+  box-shadow: none;
+  transform: none;
 }
 
 .ttt-actions {
-  margin-top: 18px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
 }
 
-/* Buttons are referenced from template docs; provide minimal styles if not present elsewhere. */
+/* Buttons */
 .btn {
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 10px;
+  appearance: none;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: var(--color-primary);
+  color: #ffffff;
+
+  border-radius: 12px;
   padding: 10px 16px;
-  font-weight: 600;
+
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+
   cursor: pointer;
-  transition: transform 0.08s ease, box-shadow 0.2s ease, opacity 0.2s ease;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transition: transform 120ms ease, box-shadow 200ms ease, filter 200ms ease,
+    background-color 200ms ease, border-color 200ms ease;
+  box-shadow: 0 10px 22px rgba(59, 130, 246, 0.22);
 }
 
 .btn:hover {
-  opacity: 0.95;
+  filter: brightness(0.98);
   transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(59, 130, 246, 0.26);
 }
 
 .btn:active {
   transform: translateY(0);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 22px rgba(59, 130, 246, 0.22);
 }
 
 .btn:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.5);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-ring);
+  outline-offset: 3px;
 }
 
 .btn-large {
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 12px 18px;
+  font-size: 15px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 420px) {
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ttt-square,
+  .btn {
+    transition: none;
+  }
+}
+
+/* Tighter spacing on very small screens */
+@media (max-width: 360px) {
+  .App-header {
+    padding: 22px 12px;
+    gap: 14px;
+  }
+
   .ttt-board {
-    grid-template-columns: repeat(3, 78px);
-    grid-template-rows: repeat(3, 78px);
-    gap: 8px;
+    padding: 12px;
+    border-radius: 16px;
+    --gap: 8px;
   }
 
   .ttt-square {
-    font-size: 38px;
-    border-radius: 12px;
-  }
-
-  .title {
-    font-size: 36px;
+    border-radius: 14px;
   }
 }
