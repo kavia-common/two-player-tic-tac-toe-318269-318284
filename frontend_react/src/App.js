@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import "./App.css";
+import { calculateIsDraw, calculateWinner } from "./gameLogic";
 
 /**
- * Tic Tac Toe UI scaffold + basic game state.
- * This file intentionally keeps all logic in App.js for now; win/draw detection is wired as placeholders.
+ * Tic Tac Toe UI scaffold + game state.
+ * Winner/draw detection is computed from the board state via pure utilities.
  */
 
 // PUBLIC_INTERFACE
@@ -20,15 +21,12 @@ function App() {
    */
   const [currentPlayer, setCurrentPlayer] = useState("X");
 
-  /**
-   * Outcome placeholder: later steps will compute winner/draw.
-   * Keep these here so status/restart behavior is already wired to "game finished".
-   */
-  const winner = null; // placeholder to be wired next
-  const isDraw = false; // placeholder to be wired next
+  /** Compute outcome from current board (pure derivation). */
+  const winner = useMemo(() => calculateWinner(squares), [squares]);
+  const isDraw = useMemo(() => calculateIsDraw(squares), [squares]);
   const isFinished = Boolean(winner) || isDraw;
 
-  /** Status area: show Next: X|O or final outcome placeholders (winner/draw). */
+  /** Status area: show Winner / Draw / Next. */
   const statusText = useMemo(() => {
     if (winner) return `Winner: ${winner}`;
     if (isDraw) return "Draw";
@@ -39,25 +37,23 @@ function App() {
     // Ignore clicks if the game is finished or the target square is already occupied.
     if (isFinished) return;
 
-    setSquares((prev) => {
-      if (prev[index] !== null) return prev;
+    // Only apply a move if the square is empty.
+    if (squares[index] !== null) return;
 
-      const next = [...prev];
-      next[index] = currentPlayer;
-      return next;
-    });
+    const nextSquares = [...squares];
+    nextSquares[index] = currentPlayer;
 
-    // Turn alternation after a valid move.
-    // Note: winner/draw detection will be added next; for now, always alternate on a valid click.
+    setSquares(nextSquares);
+
+    // Alternate turn after a valid move.
     setCurrentPlayer((p) => (p === "X" ? "O" : "X"));
   };
 
   // PUBLIC_INTERFACE
   const handleRestart = () => {
-    /** Reset to empty board and reset turn/outcome. */
+    /** Reset to empty board and reset turn. */
     setSquares(Array(9).fill(null));
     setCurrentPlayer("X");
-    // winner/isDraw are placeholders (computed later), so no setter needed yet.
   };
 
   return (
@@ -70,14 +66,11 @@ function App() {
           </p>
         </section>
 
-        <section
-          className="ttt-board"
-          aria-label="Tic Tac Toe board"
-          role="grid"
-        >
+        <section className="ttt-board" aria-label="Tic Tac Toe board" role="grid">
           {squares.map((value, index) => {
             const row = Math.floor(index / 3) + 1;
             const col = (index % 3) + 1;
+            const isDisabled = isFinished || value !== null;
 
             return (
               <button
@@ -85,6 +78,8 @@ function App() {
                 type="button"
                 className="ttt-square"
                 onClick={() => handleSquareClick(index)}
+                disabled={isDisabled}
+                aria-disabled={isDisabled}
                 aria-label={`Square row ${row} column ${col}${
                   value ? `, ${value}` : ", empty"
                 }`}
