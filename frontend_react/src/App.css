@@ -102,3 +102,112 @@
     font-size: 12px;
   }
 }
+
+/* --- Tic Tac Toe scaffold styles --- */
+.title {
+  margin: 0 0 6px;
+  font-size: 42px;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0 0 18px;
+  font-size: 16px;
+  opacity: 0.85;
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 92px);
+  grid-template-rows: repeat(3, 92px);
+  gap: 10px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.ttt-square {
+  appearance: none;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ttt-square:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.ttt-square:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ttt-square:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.ttt-actions {
+  margin-top: 18px;
+}
+
+/* Buttons are referenced from template docs; provide minimal styles if not present elsewhere. */
+.btn {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.btn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.btn:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+.btn-large {
+  padding: 12px 20px;
+  font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 420px) {
+  .ttt-board {
+    grid-template-columns: repeat(3, 78px);
+    grid-template-rows: repeat(3, 78px);
+    gap: 8px;
+  }
+
+  .ttt-square {
+    font-size: 38px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 36px;
+  }
+}
